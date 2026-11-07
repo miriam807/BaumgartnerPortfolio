@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Miriam Baumgartner – Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=DM+Sans:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #d9d9d7;
+      --ink: #1c1c1b;
+      --muted: #7d7d7a;
+      --line: #b0b0ad;
+      --p1: #c8c8c5;
+      --p2: #b5b5b2;
+      --p3: #a2a2a0;
+      --p4: #919190;
+      --btn: #1c1c1b;
+      --btnt: #d9d9d7;
+      --display: 'Syne', system-ui, sans-serif;
+      --body: 'DM Sans', system-ui, sans-serif
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #1b1b1a;
+      --ink: #ececea;
+      --muted: #8d8d8a;
+      --line: #3a3a38;
+      --p1: #2c2c2b;
+      --p2: #343433;
+      --p3: #3d3d3b;
+      --p4: #464644;
+      --btn: #ececea;
+      --btnt: #1b1b1a
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.5;
+      overflow-x: hidden;
+      transition: background .4s, color .4s
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--display);
+      line-height: .95;
+      letter-spacing: -.03em
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer
+    }
+
+    .bar {
+      position: fixed;
+      inset: 0 0 auto;
+      height: 3px;
+      background: var(--ink);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      z-index: 60
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .9rem 1.6rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--ink);
+      background: transparent;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--ink);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      will-change: transform
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--btn);
+      transform: translateY(101%);
+      transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+      z-index: -1;
+      border-radius: inherit
+    }
+
+    .btn:hover::before,
+    .btn:focus-visible::before {
+      transform: none
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      color: var(--btnt)
+    }
+
+    .btn.solid {
+      background: var(--btn);
+      color: var(--btnt)
+    }
+
+    .btn.solid::before {
+      background: var(--bg)
+    }
+
+    .btn.solid:hover {
+      color: var(--ink)
+    }
+
+    .btn.round {
+      width: 3rem;
+      height: 3rem;
+      padding: 0;
+      justify-content: center
+    }
+
+    /* Navigation */
+    .top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem clamp(1rem, 4vw, 3rem);
+    }
+
+    .top .logo {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.2rem;
+      background: none;
+      border: 0
+    }
+
+    .top div {
+      display: flex;
+      gap: .6rem
+    }
+
+    .top .btn {
+      background: var(--bg)
+    }
+
+    .menu {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: var(--ink);
+      color: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 clamp(1rem, 4vw, 3rem);
+      clip-path: inset(0 0 100% 0);
+      visibility: hidden
+    }
+
+    .menu button.l {
+      background: none;
+      border: 0;
+      text-align: left;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(3rem, 12vw, 9rem);
+      line-height: 1;
+      letter-spacing: -.04em;
+      color: var(--bg);
+      opacity: .9
+    }
+
+    .menu button.l:hover {
+      opacity: 1;
+      padding-left: 1.5rem
+    }
+
+    .menu button.l {
+      transition: padding .3s
+    }
+
+    /* Cursor */
+    .ring {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      margin: -7px 0 0 -7px;
+      border-radius: 50%;
+      background: #fff;
+      mix-blend-mode: difference;
+      pointer-events: none;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      font-size: 0;
+      transition: width .25s, height .25s, margin .25s
+    }
+
+    .ring.big {
+      width: 84px;
+      height: 84px;
+      margin: -42px 0 0 -42px;
+      background: rgba(200, 200, 200, 0.2);
+      backdrop-filter: blur(12px) invert(1);
+      color: var(--ink);
+      mix-blend-mode: normal;
+      font-size: .8rem;
+      font-weight: 500
+    }
+
+    @media (hover:none) {
+      .ring {
+        display: none
+      }
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 clamp(1rem, 4vw, 3rem) 3rem
+    }
+
+    .hero h1 {
+      font-size: clamp(3.5rem, 14vw, 16rem);
+      font-weight: 800;
+      overflow: hidden;
+      padding-bottom: .08em
+    }
+
+    .hero h1 .ch {
+      display: inline-block
+    }
+
+    .hero .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: end;
+      margin-top: 1.5rem
+    }
+
+    .hero p {
+      max-width: 38ch;
+      color: var(--muted)
+    }
+
+    .hero .btns {
+      display: flex;
+      gap: .7rem;
+      flex-wrap: wrap
+    }
+
+    .statement {
+      padding: 25vh clamp(1rem, 4vw, 3rem)
+    }
+
+    .statement p {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(1.8rem, 5vw, 4.2rem);
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      max-width: 22ch
+    }
+
+    .statement .w {
+      color: var(--ink);
+      opacity: .2
+    }
+
+    /* Horizontale Galerie */
+    .hs {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      perspective: 1200px
+    }
+
+    .hs h2 {
+      flex: none;
+      font-size: clamp(3rem, 10vw, 9rem);
+      font-weight: 800;
+      max-width: 6ch;
+      padding: 0 2rem 0 clamp(1rem, 4vw, 3rem)
+    }
+
+    .track {
+      display: flex;
+      gap: 2rem;
+      padding-right: clamp(1rem, 4vw, 3rem)
+    }
+
+    .item {
+      flex: none;
+      width: min(62vw, 400px);
+      aspect-ratio: 3/4;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      background: var(--c);
+      border: 0;
+      padding: 0;
+      text-align: left
+    }
+
+    .item:nth-child(even) {
+      margin-top: 8vh
+    }
+
+    .item:nth-child(odd) {
+      margin-bottom: 8vh
+    }
+
+    .m {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .cap {
+      position: absolute;
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+      color: var(--ink);
+      pointer-events: none
+    }
+
+    /* Video */
+    .vid {
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden
+    }
+
+    .vbox {
+      width: 36vw;
+      height: 36vh;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #2a2a29;
+      position: relative;
+      display: grid;
+      place-items: center;
+      color: #cfcfcc;
+      border: 0
+    }
+
+    .vbox video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .vbox span {
+      font-family: var(--display);
+      font-size: clamp(1.5rem, 4vw, 3.5rem);
+      font-weight: 800
+    }
+
+    /* Projekte + Filter */
+    .work {
+      padding: 12vh clamp(1rem, 4vw, 3rem)
+    }
+
+    .work h2 {
+      font-size: clamp(2.5rem, 8vw, 7rem);
+      font-weight: 800;
+      margin-bottom: 2rem
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: 2rem
+    }
+
+    .filters .btn[aria-pressed="true"] {
+      background: var(--btn);
+      color: var(--btnt)
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+      grid-auto-flow: dense
+    }
+
+    .card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--c);
+      border: 0;
+      padding: 0;
+      text-align: left
+    }
+
+    .card.wide {
+      grid-column: span 2;
+      aspect-ratio: auto
+    }
+
+    .card .m {
+      transition: transform .6s
+    }
+
+    .card:hover .m {
+      transform: scale(1.06)
+    }
+
+    .card .ph {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--muted)
+    }
+
+    .badge {
+      position: absolute;
+      top: .8rem;
+      left: .8rem;
+      padding: .2rem .7rem;
+      border-radius: 99px;
+      background: var(--bg);
+      font-size: .8rem;
+      font-weight: 500
+    }
+
+    @media (max-width:600px) {
+      .card.wide {
+        grid-column: auto;
+        aspect-ratio: 4/5
+      }
+    }
+
+    /* Lightbox */
+    dialog {
+      border: 0;
+      background: var(--bg);
+      color: var(--ink);
+      border-radius: 18px;
+      width: min(94vw, 1000px);
+      padding: 1rem;
+      margin: auto
+    }
+
+    dialog::backdrop {
+      background: rgba(14, 14, 13, .8);
+      backdrop-filter: blur(6px)
+    }
+
+    dialog .stage {
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--p2);
+      display: grid;
+      place-items: center;
+      min-height: 40vh;
+      max-height: 68vh
+    }
+
+    dialog img,
+    dialog video {
+      max-width: 100%;
+      max-height: 68vh;
+      display: block
+    }
+
+    dialog .bar2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: .8rem
+    }
+
+    dialog h2 {
+      font-size: 1.6rem;
+      margin-bottom: .3rem
+    }
+
+    dialog p {
+      color: var(--muted);
+      max-width: 50ch
+    }
+
+    dialog .ctrl {
+      display: flex;
+      gap: .5rem
+    }
+
+    /* Footer */
+    .mq {
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 6vh 0;
+      border-top: 1px solid var(--line)
+    }
+
+    .mq div {
+      display: inline-block;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(3rem, 10vw, 9rem)
+    }
+
+    .mq span {
+      margin-right: 3rem
+    }
+
+    footer {
+      padding: 3rem clamp(1rem, 4vw, 3rem);
+      display: grid;
+      gap: 1.5rem;
+      justify-items: start
+    }
+
+    footer h2 {
+      font-size: clamp(2rem, 6vw, 6rem);
+      font-weight: 800;
+      max-width: 14ch
+    }
+
+    footer .btns {
+      display: flex;
+      gap: .7rem;
+      flex-wrap: wrap
+    }
+
+    footer small {
+      color: var(--muted)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bar" id="bar"></div>
+  <div class="ring" id="ring"><span id="ringT"></span></div>
+
+  <div class="top">
+    <button class="logo" data-go="#top" aria-label="Nach oben">Miriam Baumgartner</button>
+    <div>
+      <button class="btn round mag" id="theme" aria-label="Hell/Dunkel umschalten">◐</button>
+      <button class="btn mag" id="menuBtn" aria-expanded="false">Menü</button>
+    </div>
+  </div>
+  <nav class="menu" id="menu" aria-label="Hauptmenü">
+    <button class="l" data-go="#arbeiten">Galerie</button>
+    <button class="l" data-go="#projekte">Projekte</button>
+    <button class="l" data-go="#kontakt">Kontakt</button>
+  </nav>
+
+  <header class="hero" id="top">
+    <h1 id="name" aria-label="Dein Name">Mein       Portfolio</h1>
+    <div class="row">
+      <p></p>
+      <div class="btns">
+        <button class="btn solid mag" data-go="#projekte">Projekte ansehen</button>
+        <button class="btn mag" data-go="#kontakt">Kontakt</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="statement">
+    <p id="stmt">Ich bin Miriam Baumgartner, 17 Jahre alt und Schülerin der HTL1, wo ich meinen Leidenschaften wie
+      Fotografie, Design, Videoschnitt und Medien nachgehe.</p>
+  </section>
+
+  <section class="hs" id="arbeiten">
+    <h2>Poster &amp; Bilder</h2>
+    <div class="track" id="track"></div>
+  </section>
+
+  <section class="vid"><button class="vbox" id="vbox" aria-label="Showreel abspielen"><span>Showreel</span></button>
+  </section>
+
+  <section class="work" id="projekte">
+    <h2>Alle Projekte</h2>
+    <div class="filters" id="filters" role="group" aria-label="Filter"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <div class="mq" aria-hidden="true">
+    <div id="mq"></div>
+  </div>
+  <footer id="kontakt">
+    <h2>Lass uns zusammenarbeiten.</h2>
+    <div class="btns">
+      <a class="btn solid mag" href="mailto:baumgamir@gmail.at">E-Mail schreiben</a>
+      <button class="btn mag" id="copy">E-Mail kopieren</button>
+      <button class="btn mag" data-go="#top">Nach oben ↑</button>
+    </div>
+    <small>© <span id="y"></span> Miriam Baumgartner</small>
+  </footer>
+
+  <dialog id="lb">
+    <div class="stage" id="stage"></div>
+    <div class="bar2">
+      <div>
+        <h2 id="lbT"></h2>
+        <p id="lbD"></p>
+      </div>
+      <div class="ctrl">
+        <button class="btn round" id="prev" aria-label="Zurück">←</button>
+        <button class="btn round" id="next" aria-label="Weiter">→</button>
+        <button class="btn" id="close">Schließen</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+  <script>
+    /* ===== DEINE INHALTE =====
+       type: "image" | "video" | "gif"   src: Dateipfad ("" = grauer Platzhalter)
+       featured:true = erscheint in der horizontalen Galerie   wide:true = breite Kachel */
+    const showreel = "video/showreel.mp4";   // z.B. "medien/showreel.mp4"
+    const projects = [
+      { title: "", cat: "Poster", type: "image", src: "Bilder/ProximaNovamneu Kopie.jpg", thumb: "", desc: "Schriftplakat über Proxima Nova, Einzelaufgabe, Programm: Adobe InDesign", featured: true },
+      { title: "", cat: "Design", type: "image", src: "Bilder/0008.jpg", thumb: "", desc: "Fabelwesendesign, Einzelaufgabe, Programm: Adobe Photoshop", featured: true },
+      { title: "", cat: "Poster", type: "image", src: "Bilder/mantana.jpg", thumb: "", desc: "Schriftplakat über Neue Metana Next, Einzelaufgabe, Programm: Adobe InDesign", featured: true },
+      { title: "", cat: "Poster", type: "image", src: "Bilder/markus.jpg", thumb: "", desc: "Namensposter inspiriert durch Marvel, eigenes Projekt, Programm: Adobe InDesign, Adobe Photoshop", featured: true },
+      { title: "", cat: "Poster", type: "image", src: "Bilder/bau.jpg", thumb: "", desc: "Infografik über Muffenschweißung, Gruppenarbeit, Programm: Adobe InDesign, Adobe Illustrator", featured: false },
+      { title: "", cat: "Poster", type: "image", src: "Bilder/Baumgartner_PosteranalyseV1 Kopie.jpg", thumb: "", desc: "Posteranalyse Art Exhibition, Einzelaufgabe, Programm: Adobe InDesign", featured: true },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/01.jpg", thumb: "", desc: "Faceswap (mit passenden Kameraeinstellungen fotografiert), Einzelaufgabe, Programm: Adobe Lightroom, Adobe Photoshop", featured: false },
+      { title: "", cat: "Design", type: "image", src: "Bilder/Shil.jpg", thumb: "", desc: "Branding und Logodesign über eine Kosmetikbrand, Einzelaufgabe, Programm: Adobe InDesign, Adobe Photoshop, Adobe Illustrator", featured: false },
+      { title: "", cat: "Design", type: "image", src: "Bilder/lightning.jpg", thumb: "", desc: "Branding und Logodesign über eine Musikbrand, Einzelaufgabe, Programm: Adobe InDesign, Adobe Photoshop, Adobe Illustrator", featured: true },
+      { title: "", cat: "Design", type: "image", src: "Bilder/collage.jpg", thumb: "", desc: "Collage, Einzelaufgabe, Programm: Adobe Photoshop", featured: true },
+      { title: "", cat: "Design", type: "image", src: "Bilder/0006.jpg", thumb: "", desc: "Gutscheindesign für Kinobesuch, eigenes Projekt, Programm: Adobe InDesign, Adobe Photoshop", featured: false },
+      { title: "", cat: "Design", type: "image", src: "Bilder/planz.jpg", thumb: "", desc: "Appkonzept, Gruppenarbeit, Programm: Adobe InDesign, Adobe Photoshop", featured: true },
+      { title: "", cat: "Poster", type: "image", src: "Bilder/bbb.jpg", thumb: "", desc: "Experimentielles Poster (ABC), Einzelaufgabe, Programm: Adobe InDesign, Adobe Photoshop, Kamera: Canon", featured: false },
+      { title: "", cat: "Video", type: "video", src: "video/0002.mp4", thumb: "", desc: "Generative fill, Einzelaufgabe, Programm: Adobe Photoshop, Adobe Premiere Pro, Kamera: Black Magic, Kamera Setup", wide: true },
+      { title: "", cat: "Video", type: "video", src: "video/0003.mp4", thumb: "", desc: "Interview gedreht und geschnitten, Einzelaufgabe, Programm: Adobe Premiere Pro, Kamera: Black Magic, Kamera Setup", wide: true },
+      { title: "", cat: "Video", type: "video", src: "video/010.mp4", thumb: "", desc: "Over the Shoulder Dreh, Einzelaufgabe, Programm: Premiere Pro, Kamera: Black Magic, Kamera Setup", wide: true },
+      { title: "", cat: "Video", type: "video", src: "video/011.mp4", thumb: "", desc: "Soundeffekte neu aufnehmen und cutten, Einzelaufgabe, Programm: Adobe Audition, Adobe Premiere Pro", wide: true },
+      { title: "", cat: "Video", type: "video", src: "video/013.mp4", thumb: "", desc: "Kurzfilm (Blicke Täuschen), Einzelaufgabe, Programm: Adobe Premiere Pro, Kamera: Black Magic, Kamera Setup", wide: true },
+      { title: "", cat: "Animation", type: "video", src: "video/0004.mp4", thumb: "", desc: "Audiovisualizer, Einzelaufgabe, Programm: Adobe After Effects, Adobe Illustrator", wide: true },
+      { title: "", cat: "Animation", type: "video", src: "video/009.mp4", thumb: "", desc: "Weihnachtsanimation, Einzelaufgabe, Programm: Adobe After Effects, Adobe Illustrator", wide: true },
+      { title: "", cat: "Animation", type: "video", src: "video/012.mp4", thumb: "", desc: "Hüpfender Ball Animation, Einzelaufgabe, Programm: Adobe After Effects", wide: true },
+      { title: "", cat: "Animation", type: "video", src: "video/0005.mp4", thumb: "", desc: "Rotoscoping mit eigener Animation, Einzelaufgabe, Programm: Adobe Animate, Adobe After Effects", wide: true },
+      { title: "", cat: "Design", type: "image", src: "Bilder/0007.jpg", thumb: "", desc: "Charakterdesign, eigenes Projekt, Programm: Adobe Illustrator", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/a.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/v.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/d.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/e.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/f.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/g.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/h.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/s.jpg", thumb: "", desc: "", featured: true },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/n.jpg", thumb: "", desc: "", featured: true },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/o.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/p.jpg", thumb: "", desc: "", featured: true },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/r.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/t.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/u.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/w.jpg", thumb: "", desc: "", featured: false },
+      { title: "", cat: "Fotografie", type: "image", src: "Bilder/x.jpg", thumb: "", desc: "", featured: false },
+      
+      
+    ];
+    const cats = ["Poster", "Fotografie", "Animation", "Video", "Design"];
+    /* ========================= */
+
+    const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+    const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const greys = ["var(--p1)", "var(--p2)", "var(--p3)", "var(--p4)"];
+    const thumbOf = p => p.type === "video" ? p.thumb : p.src;
+    const mediaTag = p => {
+      if (p.type === "video" && p.src) {
+        return `<video class="m" src="${esc(p.src)}" muted loop playsinline autoplay></video>`;
+      }
+
+      const t = thumbOf(p);
+      return t
+        ? `<img class="m" src="${esc(t)}" alt="${esc(p.title)}" loading="lazy">`
+        : `<span class="ph">${esc(p.title)}</span>`;
+    };
+    /* Inhalt aufbauen */
+    $("#track").innerHTML = projects.map((p, i) => ({ p, i })).filter(o => o.p.featured).map(({ p, i }, k) =>
+      `<button class="item" data-i="${i}" data-cursor="Ansehen" style="--c:${greys[k % 4]}">${mediaTag(p)}<span class="cap"><span>${esc(p.title)}</span><span>${esc(p.cat)}</span></span></button>`).join("");
+    $("#grid").innerHTML = projects.map((p, i) =>
+      `<button class="card${p.wide ? " wide" : ""}" data-i="${i}" data-cat="${esc(p.cat)}" data-cursor="Ansehen" style="--c:${greys[i % 4]}">${mediaTag(p)}<span class="badge">${esc(p.cat)}</span></button>`).join("");
+    $("#mq").innerHTML = [0, 1].map(() => cats.map(c => `<span>${c}</span>`).join("")).join("");
+    if (showreel) $("#vbox").insertAdjacentHTML("afterbegin", `<video src="${esc(showreel)}" muted loop playsinline autoplay></video>`);
+    $("#y").textContent = new Date().getFullYear();
+    const nm = $("#name"); nm.innerHTML = [...nm.textContent].map(c => `<span class="ch" aria-hidden="true">${c === " " ? "&nbsp;" : c}</span>`).join("");
+    const st = $("#stmt"); st.innerHTML = st.textContent.split(" ").map(w => `<span class="w">${w}</span>`).join(" ");
+
+    /* Filter mit Flip-Animation */
+    let filter = "Alle";
+    ["Alle", ...cats].forEach(c => {
+      const b = document.createElement("button"); b.className = "btn mag"; b.textContent = c; b.setAttribute("aria-pressed", c === "Alle");
+      b.onclick = () => {
+        filter = c; $$("#filters .btn").forEach(x => x.setAttribute("aria-pressed", x === b));
+        const grid = $("#grid"), cards = $$(".card");
+        const h0 = grid.offsetHeight;                       // Höhe vorher
+        const state = Flip.getState(cards);
+        cards.forEach(k => k.style.display = (c === "Alle" || k.dataset.cat === c) ? "" : "none");
+        const h1 = grid.offsetHeight;                       // Höhe nachher
+        gsap.fromTo(grid, { height: h0 }, {                 // Höhe fixieren und sanft anpassen
+          height: h1, duration: RM ? 0 : .6, ease: "power2.inOut", clearProps: "height"
+        });
+        Flip.from(state, {
+          duration: RM ? 0 : .6, ease: "power2.inOut", absolute: true,
+          onEnter: e => gsap.fromTo(e, { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .5 }),
+          onLeave: e => gsap.to(e, { opacity: 0, scale: .8, duration: .4 }),
+          onComplete: () => window.ScrollTrigger && ScrollTrigger.refresh()
+        });
+      };
+      $("#filters").appendChild(b);
+    });
+
+    /* Lightbox mit Vor/Zurück */
+    const lb = $("#lb"); let cur = 0;
+    const list = () => projects.map((p, i) => i).filter(i => filter === "Alle" || projects[i].cat === filter);
+    function show(i) {
+      cur = i; const p = projects[i], s = $("#stage");
+      s.innerHTML = !p.src ? `<span style="font-family:var(--display);font-size:2rem;color:var(--muted)">${esc(p.title)}</span>`
+        : p.type === "video" ? `<video src="${esc(p.src)}" controls autoplay playsinline></video>` : `<img src="${esc(p.src)}" alt="${esc(p.title)}">`;
+      $("#lbT").textContent = p.title; $("#lbD").textContent = p.desc || "";
+    }
+    function step(d) { const l = list(), k = l.indexOf(cur); show(l[(k + d + l.length) % l.length] ?? cur) }
+    document.addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (b) { show(+b.dataset.i); lb.showModal() } });
+    $("#prev").onclick = () => step(-1); $("#next").onclick = () => step(1); $("#close").onclick = () => lb.close();
+    lb.addEventListener("click", e => { if (e.target === lb) lb.close() });
+    lb.addEventListener("close", () => $("#stage").innerHTML = "");
+    lb.addEventListener("keydown", e => { if (e.key === "ArrowRight") step(1); if (e.key === "ArrowLeft") step(-1) });
+    $("#vbox").onclick = () => { const v = $("#vbox video"); if (v) { v.muted = !v.muted; if (!v.muted) v.play() } };
+
+    /* Theme, Kopieren */
+    $("#theme").onclick = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === "dark" ? "" : "dark" };
+    $("#copy").onclick = async e => { try { await navigator.clipboard.writeText("baumgamir@gmail.at"); e.target.textContent = "Kopiert ✓"; setTimeout(() => e.target.textContent = "E-Mail kopieren", 1800) } catch { e.target.textContent = "baumgamir@gmail.at" } };
+
+    /* Menü */
+    const menu = $("#menu"), mb = $("#menuBtn"); let open = false;
+    function toggleMenu(f) {
+      open = f ?? !open; mb.textContent = open ? "Schließen" : "Menü"; mb.setAttribute("aria-expanded", open);
+      if (!window.gsap) { menu.style.visibility = open ? "visible" : "hidden"; menu.style.clipPath = open ? "none" : ""; return }
+      if (open) {
+        menu.style.visibility = "visible"; gsap.to(menu, { clipPath: "inset(0 0 0% 0)", duration: .7, ease: "power4.inOut" });
+        gsap.from(".menu .l", { yPercent: 100, opacity: 0, stagger: .08, delay: .3, duration: .7, ease: "power3.out" })
+      }
+      else gsap.to(menu, { clipPath: "inset(0 0 100% 0)", duration: .6, ease: "power4.inOut", onComplete: () => menu.style.visibility = "hidden" });
+    }
+    mb.onclick = () => toggleMenu();
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && open) toggleMenu(false) });
+
+    /* Sanft zu Abschnitten springen */
+    document.addEventListener("click", e => {
+      const b = e.target.closest("[data-go]"); if (!b) return;
+      if (open) toggleMenu(false);
+      window.gsap ? gsap.to(window, { scrollTo: b.dataset.go, duration: RM ? 0 : 1.4, ease: "power3.inOut" }) : $(b.dataset.go).scrollIntoView();
+    });
+
+    if (window.gsap) {
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Flip);
+
+      /* Eigener Cursor + magnetische Buttons (nur mit Maus) */
+      if (matchMedia("(hover:hover)").matches) {
+        const ring = $("#ring"), rt = $("#ringT"), qx = gsap.quickTo(ring, "x", { duration: .25 }), qy = gsap.quickTo(ring, "y", { duration: .25 });
+        addEventListener("mousemove", e => { qx(e.clientX); qy(e.clientY) });
+        document.addEventListener("mouseover", e => {
+          const t = e.target.closest("[data-cursor]");
+          ring.classList.toggle("big", !!t); rt.textContent = t ? t.dataset.cursor : ""
+        });
+        $$(".mag").forEach(b => {
+          const x = gsap.quickTo(b, "x", { duration: .5, ease: "elastic.out(1,.5)" }), y = gsap.quickTo(b, "y", { duration: .5, ease: "elastic.out(1,.5)" });
+          b.addEventListener("mousemove", e => { const r = b.getBoundingClientRect(); x((e.clientX - r.left - r.width / 2) * .3); y((e.clientY - r.top - r.height / 2) * .4) });
+          b.addEventListener("mouseleave", () => { x(0); y(0) });
+        });
+        /* 3D-Neigung der Galeriebilder */
+        $$(".item").forEach(it => {
+          it.addEventListener("mousemove", e => {
+            const r = it.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+            gsap.to(it, { rotateY: px * 14, rotateX: -py * 14, transformPerspective: 900, duration: .4 })
+          });
+          it.addEventListener("mouseleave", () => gsap.to(it, { rotateX: 0, rotateY: 0, duration: .6 }));
+        });
+      }
+      if (!RM) {
+        gsap.from(".ch", { yPercent: 110, rotate: 6, duration: 1.1, ease: "power4.out", stagger: .05 });
+        gsap.to("#bar", { scaleX: 1, ease: "none", scrollTrigger: { scrub: .2, start: 0, end: "max" } });
+        gsap.to(".statement .w", {
+          opacity: 1, stagger: .15, ease: "none",
+          scrollTrigger: { trigger: ".statement", start: "top 70%", end: "bottom 55%", scrub: true }
+        });
+        const hs = $(".hs"), dist = () => hs.scrollWidth - innerWidth;
+        gsap.to([hs.querySelector("h2"), $("#track")], {
+          x: () => -dist(), ease: "none",
+          scrollTrigger: { trigger: hs, start: "top top", end: () => "+=" + dist(), pin: true, scrub: .6, invalidateOnRefresh: true }
+        });
+        gsap.fromTo("#vbox", { width: "36vw", height: "36vh", borderRadius: 48 }, {
+          width: "100vw", height: "100vh", borderRadius: 0, ease: "none",
+          scrollTrigger: { trigger: ".vid", start: "top top", end: "+=120%", pin: true, scrub: .5 }
+        });
+        gsap.from(".card", {
+          y: 60, opacity: 0, stagger: .08, duration: .8, ease: "power3.out",
+          scrollTrigger: { trigger: "#grid", start: "top 80%" }
+        });
+        gsap.to("#mq", { xPercent: -50, ease: "none", scrollTrigger: { trigger: ".mq", start: "top bottom", end: "bottom top", scrub: true } });
+      } else { $$(".statement .w").forEach(w => { w.style.opacity = 1; w.style.color = "var(--ink)" }) }
+    }
+  </script>
+</body>
+
+</html>
